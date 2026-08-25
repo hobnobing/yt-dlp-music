@@ -10,11 +10,11 @@ Simple [yt-dlp](https://github.com/yt-dlp/yt-dlp) script that downloads in m4a a
 
 Arch
 ```
-sudo pacman -S --needed yt-dlp ffmpeg python-mutagen git wget imagemagick flac nodejs
+sudo pacman -S --needed yt-dlp ffmpeg python-mutagen git wget imagemagick nodejs
 ```
 Debian / Ubuntu / Mint
 ```
-sudo pacman -S --needed yt-dlp ffmpeg python-mutagen git wget imagemagick flac nodejs
+sudo pacman -S --needed yt-dlp ffmpeg python-mutagen git wget imagemagick nodejs
 ```
 Note: yt-dlp in official Debian/Ubuntu repositories can become quickly outdated. If you get any errors, try using the latest version from their [repo](https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp).
 
