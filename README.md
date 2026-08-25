@@ -49,7 +49,7 @@ All music is downloaded to ~/Music/ to change this edit.
 
 and change --output to your liking.
 
-Always keep yt-dlp updated ```yt-dlp -U``` basically every issue related to this script is due to having an outdated version.
+Always keep yt-dlp updated. Basically every issue related to this script is due to having an outdated version.
 
 
 
