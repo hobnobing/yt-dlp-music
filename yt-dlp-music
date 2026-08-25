@@ -3,22 +3,21 @@ set -e
 
 workdir=$(mktemp -d)
 
-# clean up temp dir on exit even if the script fails midway
 trap 'rm -rf "$workdir"' EXIT
 
-# use exported cookies.txt file!!
-yt-dlp -f "ba/b" --extract-audio --audio-format flac \
+# download as m4a
+yt-dlp -f "ba[ext=m4a]/ba/b" --extract-audio --audio-format m4a \
   --cookies "$HOME/.config/yt-dlp/cookies.txt" \
   --convert-thumbnails jpg \
   --embed-metadata --add-metadata \
   --write-thumbnail \
   --output "$workdir/%(artist,uploader)s - %(title)s.%(ext)s" "$@"
 
-flac_file=$(find "$workdir" -type f -name "*.flac" | head -n 1)
+m4a_file=$(find "$workdir" -type f -name "*.m4a" | head -n 1)
 thumb_file=$(find "$workdir" -type f -name "*.jpg" | head -n 1)
 
-if [[ -z "$flac_file" ]]; then
-    echo "Error: FLAC audio file was not created." >&2
+if [[ -z "$m4a_file" ]]; then
+    echo "Error: M4A audio file was not created." >&2
     exit 1
 fi
 
@@ -31,33 +30,24 @@ fi
 cropped_thumb="$workdir/cropped.jpg"
 magick "$thumb_file" -gravity center -crop 1:1 +repage "$cropped_thumb"
 
-# embed cropped thumbnail with pmutagen
-FLAC_FILE="$flac_file" CROPPED_THUMB="$cropped_thumb" python3 <<'EOF'
+# embed cropped thumbnail
+M4A_FILE="$m4a_file" CROPPED_THUMB="$cropped_thumb" python3 <<'EOF'
 import os
-from mutagen.flac import FLAC, Picture
+from mutagen.mp4 import MP4, MP4Cover
 
-audio = FLAC(os.environ['FLAC_FILE'])
+audio = MP4(os.environ['M4A_FILE'])
 cropped = os.environ['CROPPED_THUMB']
 
-audio.clear_pictures()
-
-pic = Picture()
-pic.type = 3  # Front cover
-pic.mime = 'image/jpeg'
-pic.desc = 'Cover'
-
 with open(cropped, 'rb') as f:
-    pic.data = f.read()
+    data = f.read()
 
-audio.add_picture(pic)
+# 'covr' is the M4A atom for album artwork (FORMAT_JPEG = 13)
+audio['covr'] = [MP4Cover(data, imageformat=MP4Cover.FORMAT_JPEG)]
 audio.save()
 EOF
 
-# ensure destination directory exists
+# create music dir & move
 mkdir -p "$HOME/Music"
+mv "$m4a_file" "$HOME/Music/"
 
-# move file to final location
-mv "$flac_file" "$HOME/Music/"
-
-printf "\nDownloaded and tagged: %s\n" "$(basename "$flac_file")"
-read -rp "Press Enter to exit..."
+printf "\nDownloaded: %s\n" "$(basename "$m4a_file")"
