@@ -3,6 +3,7 @@
 Simple [yt-dlp](https://github.com/yt-dlp/yt-dlp) bash script that formats all audio to FLAC and automatically adds song metadata, including cover art. For GUI frontend see [yt-dlp-music-gui](https://github.com/romululz/yt-dlp-music-gui).
 
 
+<img width="800" height="542" alt="ezgif-36f1ab6b1e465c15" src="https://github.com/user-attachments/assets/49be6afb-39f9-436d-b520-229df0c4144b" />
 
 
 ### Dependencies
