@@ -16,7 +16,7 @@ Debian / Ubuntu / Mint
 ```
 sudo pacman -S --needed yt-dlp ffmpeg python-mutagen git wget imagemagick flac nodejs
 ```
-Note: yt-dlp in official Debian/Ubuntu repositories can become quickly outdated. If you get errors download yt-dlp from their repo.
+Note: yt-dlp in official Debian/Ubuntu repositories can become quickly outdated. If you get errors download yt-dlp from their [repo](https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp).
 
 
 ### Cookies shenanigans
