@@ -15,7 +15,7 @@ sudo pacman -S --needed yt-dlp ffmpeg python-mutagen git wget imagemagick flac n
 
 ### Cookies shenanigans
 
-You need to export your YouTube cookies to use as authentification.
+You need to export your YouTube cookies to use as authentication.
 Use the "Get cookies.txt LOCALLY" extension. 
 Go to ```https://www.youtube.com``` click the extension, "Export As", save as cookies.txt.
 
