@@ -12,6 +12,12 @@ Arch
 ```
 sudo pacman -S --needed yt-dlp ffmpeg python-mutagen git wget imagemagick flac nodejs
 ```
+Debian / Ubuntu / Mint
+```
+sudo pacman -S --needed yt-dlp ffmpeg python-mutagen git wget imagemagick flac nodejs
+```
+Note: yt-dlp in official Debian/Ubuntu repositories can become quickly outdated. If you get errors download yt-dlp from their repo.
+
 
 ### Cookies shenanigans
 
@@ -35,7 +41,7 @@ rm -rf ~/yt-dlp-music
 chmod +x ~/.local/bin/yt-dlp-music
 ```
 
-All music is downloaded to ~/Music/ to change this edit
+All music is downloaded to ~/Music/ to change this edit.
 
 ```
 ~/.local/bin/yt-dlp-music
