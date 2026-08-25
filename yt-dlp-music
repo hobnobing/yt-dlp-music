@@ -41,7 +41,6 @@ cropped = os.environ['CROPPED_THUMB']
 with open(cropped, 'rb') as f:
     data = f.read()
 
-# 'covr' is the M4A atom for album artwork (FORMAT_JPEG = 13)
 audio['covr'] = [MP4Cover(data, imageformat=MP4Cover.FORMAT_JPEG)]
 audio.save()
 EOF
