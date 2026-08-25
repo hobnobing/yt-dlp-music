@@ -3,32 +3,38 @@ set -e
 
 workdir=$(mktemp -d)
 
-yt-dlp -f bestaudio --extract-audio --audio-format flac \
+# clean up temp dir on exit even if the script fails midway
+trap 'rm -rf "$workdir"' EXIT
+
+# use exported cookies.txt file!!
+yt-dlp -f "ba/b" --extract-audio --audio-format flac \
+  --cookies "$HOME/.config/yt-dlp/cookies.txt" \
+  --convert-thumbnails jpg \
   --embed-metadata --add-metadata \
-  --write-thumbnail --output "$workdir/%(artist)s - %(title)s.%(ext)s" "$@"
+  --write-thumbnail \
+  --output "$workdir/%(artist,uploader)s - %(title)s.%(ext)s" "$@"
 
 flac_file=$(find "$workdir" -type f -name "*.flac" | head -n 1)
-thumb_file=$(find "$workdir" -type f \( -iname "*.jpg" -o -iname "*.webp" \) | head -n 1)
+thumb_file=$(find "$workdir" -type f -name "*.jpg" | head -n 1)
 
-if [[ "$thumb_file" != *.jpg ]]; then
-    new_thumb="${thumb_file%.*}.jpg"
-    magick "$thumb_file" "$new_thumb"
-    thumb_file="$new_thumb"
+if [[ -z "$flac_file" ]]; then
+    echo "Error: FLAC audio file was not created." >&2
+    exit 1
 fi
 
-# for saving thumbnails in same dir
-#original_thumb="$HOME/Music/$(basename "${flac_file%.flac}")_original.jpg"
-#cropped_thumb="$HOME/Music/$(basename "${flac_file%.flac}")_cover.jpg"
-#cp "$thumb_file" "$original_thumb"
-#magick "$thumb_file" -gravity center -crop 1:1 +repage "$cropped_thumb"
+if [[ -z "$thumb_file" ]]; then
+    echo "Error: Thumbnail was not downloaded." >&2
+    exit 1
+fi
 
+# crop thumbnail to 1:1 ratio
 cropped_thumb="$workdir/cropped.jpg"
 magick "$thumb_file" -gravity center -crop 1:1 +repage "$cropped_thumb"
 
-####
-FLAC_FILE="$flac_file" CROPPED_THUMB="$cropped_thumb" python3 <<EOF
-from mutagen.flac import FLAC, Picture
+# embed cropped thumbnail with pmutagen
+FLAC_FILE="$flac_file" CROPPED_THUMB="$cropped_thumb" python3 <<'EOF'
 import os
+from mutagen.flac import FLAC, Picture
 
 audio = FLAC(os.environ['FLAC_FILE'])
 cropped = os.environ['CROPPED_THUMB']
@@ -46,10 +52,12 @@ with open(cropped, 'rb') as f:
 audio.add_picture(pic)
 audio.save()
 EOF
-####
 
+# ensure destination directory exists
+mkdir -p "$HOME/Music"
+
+# move file to final location
 mv "$flac_file" "$HOME/Music/"
-rm -rf "$workdir"
 
 printf "\nDownloaded and tagged: %s\n" "$(basename "$flac_file")"
 read -rp "Press Enter to exit..."
