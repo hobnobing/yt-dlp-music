@@ -16,7 +16,7 @@ sudo pacman -S --needed yt-dlp ffmpeg python-mutagen git wget imagemagick flac n
 
 You need to export your YouTube cookies to use as authentification.
 Use the "Get cookies.txt LOCALLY" extension. 
-Go to ```https://www.youtube.com``` click the extension, EXPORT ALL, save as cookies.txt.
+Go to ```https://www.youtube.com``` click the extension, "Export As", save as cookies.txt.
 
 Then make this new directory and move cookies.txt to it.
 ```
@@ -28,7 +28,7 @@ mv ~/Downloads/cookies.txt ~/.config/yt-dlp/cookies.txt
 
 ```
 mkdir -p ~/.local/bin
-git clone https://github.com/hobnobingyt-dlp-music.git
+git clone https://github.com/hobnobing/yt-dlp-music.git
 mv ~/yt-dlp-music/yt-dlp-music ~/.local/bin/
 rm -rf ~/yt-dlp-music
 chmod +x ~/.local/bin/yt-dlp-music
