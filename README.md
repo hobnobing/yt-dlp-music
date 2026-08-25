@@ -35,10 +35,6 @@ rm -rf ~/yt-dlp-music
 chmod +x ~/.local/bin/yt-dlp-music
 ```
 
-
-
-The script uses ```yt-dlp``` to download the audio as FLAC along with its thumbnail. It then uses ```magick``` to crop the thumbnail from a 16:9 rectangle to a 1:1 square. Finally ```mutagen``` is used to embed the cropped image as album art into the FLAC file.
-
 All music is downloaded to ~/Music/ to change this edit
 
 ```
