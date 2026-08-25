@@ -1,52 +1,14 @@
 #!/bin/bash
 set -e
 
-workdir=$(mktemp -d)
-
-trap 'rm -rf "$workdir"' EXIT
-
-# download as m4a
-yt-dlp -f "ba[ext=m4a]/ba/b" --extract-audio --audio-format m4a \
-  --cookies "$HOME/.config/yt-dlp/cookies.txt" \
-  --convert-thumbnails jpg \
-  --embed-metadata --add-metadata \
-  --write-thumbnail \
-  --output "$workdir/%(artist,uploader)s - %(title)s.%(ext)s" "$@"
-
-m4a_file=$(find "$workdir" -type f -name "*.m4a" | head -n 1)
-thumb_file=$(find "$workdir" -type f -name "*.jpg" | head -n 1)
-
-if [[ -z "$m4a_file" ]]; then
-    echo "Error: M4A audio file was not created." >&2
-    exit 1
-fi
-
-if [[ -z "$thumb_file" ]]; then
-    echo "Error: Thumbnail was not downloaded." >&2
-    exit 1
-fi
-
-# crop thumbnail to 1:1 ratio
-cropped_thumb="$workdir/cropped.jpg"
-magick "$thumb_file" -gravity center -crop 1:1 +repage "$cropped_thumb"
-
-# embed cropped thumbnail
-M4A_FILE="$m4a_file" CROPPED_THUMB="$cropped_thumb" python3 <<'EOF'
-import os
-from mutagen.mp4 import MP4, MP4Cover
-
-audio = MP4(os.environ['M4A_FILE'])
-cropped = os.environ['CROPPED_THUMB']
-
-with open(cropped, 'rb') as f:
-    data = f.read()
-
-audio['covr'] = [MP4Cover(data, imageformat=MP4Cover.FORMAT_JPEG)]
-audio.save()
-EOF
-
-# create music dir & move
 mkdir -p "$HOME/Music"
-mv "$m4a_file" "$HOME/Music/"
 
-printf "\nDownloaded: %s\n" "$(basename "$m4a_file")"
+yt-dlp -f "ba[ext=m4a]/ba/b" \
+  --extract-audio \
+  --audio-format m4a \
+  --cookies "$HOME/.config/yt-dlp/cookies.txt" \
+  --embed-metadata \
+  --add-metadata \
+  --embed-thumbnail \
+  --ppa "ffmpeg: -disposition:v:0 default -vf crop='ih:ih'" \
+  --output "$HOME/Music/%(artist,uploader)s - %(title)s.%(ext)s" "$@"
