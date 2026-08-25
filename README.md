@@ -41,13 +41,7 @@ rm -rf ~/yt-dlp-music
 chmod +x ~/.local/bin/yt-dlp-music
 ```
 
-All music is downloaded to ~/Music/ to change this edit.
-
-```
-~/.local/bin/yt-dlp-music
-```
-
-and change --output to your liking.
+All music is downloaded to ~/Music/. To change this edit ```~/.local/bin/yt-dlp-music``` and change --output to your liking.
 
 Always keep yt-dlp updated. Basically every issue related to this script is due to having an outdated version.
 
