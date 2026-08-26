@@ -10,11 +10,11 @@ Simple [yt-dlp](https://github.com/yt-dlp/yt-dlp) script that downloads in m4a a
 
 Arch
 ```
-sudo pacman -S yt-dlp ffmpeg
+sudo pacman -S yt-dlp ffmpeg python-mutagen
 ```
 Debian / Ubuntu / Mint
 ```
-sudo apt update && sudo apt install yt-dlp ffmpeg
+sudo apt update && sudo apt install yt-dlp ffmpeg python-mutagen
 ```
 Note: yt-dlp in official Debian/Ubuntu repositories can become quickly outdated. If you get any errors, try using the latest version from their [repo](https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp).
 
